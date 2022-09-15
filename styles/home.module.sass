@@ -1,0 +1,112 @@
+// *
+//     margin: 0
+//     padding: 0
+//     box-sizing: border-box
+
+.head
+    padding: 2.5rem
+    background-color: #fff
+    box-shadow: 0 0 5px 8px #0000001a
+    border-bottom-left-radius: 1rem
+    border-bottom-right-radius: 1rem
+    display: flex
+    align-items: center
+    justify-content: space-between
+
+    div:first-child
+        font-weight: bold
+        font-size: 1.5rem
+        
+        p:first-child, p:last-child
+            color: #333
+            font-size: 1rem
+            font-weight: normal
+            line-height: 2
+
+    div:last-child
+        display: flex
+        gap: 1rem
+        transform: scale(2) translateX(-1rem)
+
+    
+.paystack
+    align-self: flex-end
+
+
+    button
+        padding: 8px 12px
+        margin: 8px 12px
+        border-radius: 5px
+        outline: none
+        color: #ddd
+        border: none
+        background-color: #000000ee 
+        box-shadow: 0 0 3px 5px #00000012
+        font-weight: bold
+        cursor: pointer
+    
+.main
+
+
+    &>div
+        margin: 1rem 1.25rem
+        padding: 8px 10px
+        background-color: #fafafa
+        box-shadow: 0 0 3px 5px #00000011
+        // border: 1px solid #333
+        border-radius: 5px
+        display: flex
+        flex-direction: column
+        align-items: flex-start
+
+
+        h3
+            font-size: 1.1rem
+            color: #444
+            margin-block: .5rem 
+
+        p
+            font-size: .9rem 
+            color: #222
+            line-height: 1.45
+
+.icon
+    // transform: scale(2)
+    font-size: 2rem
+    color: #333
+
+.back
+    transform: scale(1.5) translateY(-10px)
+    background-color: #111
+    border-radius: 50%
+    padding: .75rem
+
+.center
+    color: #efefef
+
+.footer
+    position: fixed
+    bottom: 1rem
+    width:100%
+    display: flex
+    justify-content: center
+    background-color: #f1f1f1
+
+    &>div
+        left: 0px
+        right: 0px
+        border-radius: 1rem
+        padding: 12px
+        box-shadow: 0 0 3px #000000aa
+        width: min(600px, 90vw)
+        // margin-inline: auto
+        display: flex
+        justify-content: space-around
+        align-items: flex-end
+
+        div
+            display: flex
+            flex-direction: column
+            align-items: center
+            font-weight: bold
+

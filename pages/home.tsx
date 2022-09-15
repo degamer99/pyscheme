@@ -8,9 +8,10 @@ import { auth } from './_firebase';
 
 
 // you can call this function anything
-const onSuccess = (reference:any) => {
+const onSuccess:any = (reference: any) => {
 // Implementation for whatever you want to do with reference and after success call.
 console.log(reference);
+// return reference
 };
 
 // you can call this function anything

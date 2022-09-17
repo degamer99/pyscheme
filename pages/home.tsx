@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import styles from '../styles/home.module.sass'
 import { useState, useEffect } from 'react'
-import { FaCog, FaGift, FaHome, FaEye, FaRegEye, FaEyeSlash, FaRegEyeSlash } from "react-icons/fa";
+import { FaCog, FaGift, FaHome, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { usePaystackPayment } from 'react-paystack';
 import { onAuthStateChanged, sendPasswordResetEmail } from "firebase/auth";
 import { auth } from './_firebase';
@@ -41,25 +41,32 @@ const PaystackHookExample = () => {
 const Home: NextPage = () => {
   useEffect( ()=>{
     // why does my use effect code run twice 
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
-        const uid = user.uid;
-        const email = user.email
-        console.log({homePage: uid, user, email, he: "he is a boy"})
-      
-        // ...
-      } else {
-        // User is signed out
-        // ...
-      }
-    });
+    try {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          // User is signed in, see docs for a list of available properties
+          // https://firebase.google.com/docs/reference/js/firebase.User
+          const uid = user.uid;
+          const email = user.email
+          console.log({homePage: uid, user, email, he: "he is a boy"})
+        
+          // ...
+        } else {
+          // User is signed out
+          // ...
+        }
+      })
+    } catch (error) {
+      console.log(error)
+    }
+    // .catch( e => console.log(e));
+    // .then(()=> console.log("hlelo world"))
 
   },[])
   const [info, setInfo] = useState({p1: "Available Balance", h3: "#2000", p2: "Total Balance", eye: <FaRegEyeSlash />})
   const [altInfo, setaltInfo] = useState({p1: "Today is", h3: " 13 September", p2: "2022", eye: <FaRegEye />})
   const [ change, setChange ] = useState(true)
+  const [referals, setReferals] = useState(0)
   return (<>
       <header className={styles.head}>
         <div>
@@ -77,11 +84,47 @@ const Home: NextPage = () => {
         </div>
       </header>
       <main className={styles.main}>
-        <div>
+        <div className={styles.member}>
           <h3>Become a Member</h3>
           <p>Enjoy cool benefits, cash prizes and rewards, perform tasks and activities, earn cash through your affiliate link when someone registers.</p>
           <PaystackHookExample />
         </div>
+        <div className={styles.middle}> 
+        <h3> Your referals ({referals}) </h3>
+        <p>share</p>
+        </div>
+        <section className={styles.referrals}>
+          <article>
+            <div>
+              <h4>Name</h4>
+              <p>#500</p>
+            </div>
+            <div>
+              <h4>Total reward</h4>
+              <p>#500</p>
+            </div>
+          </article>
+          <article>
+            <div>
+              <h4>Name</h4>
+              <p>#500</p>
+            </div>
+            <div>
+              <h4>Total reward</h4>
+              <p>#500</p>
+            </div>
+          </article>
+          <article>
+            <div>
+              <h4>Name</h4>
+              <p>#500</p>
+            </div>
+            <div>
+              <h4>Total reward</h4>
+              <p>#500</p>
+            </div>
+          </article>
+        </section>
       </main>
       <footer className={styles.footer}>
         <div>

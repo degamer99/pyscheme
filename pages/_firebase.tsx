@@ -23,3 +23,7 @@ export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const message = 'hello';
 // const analytics = getAnalytics(app);
+const Fire = () =>{
+  return(<div> hi </div>)
+}
+export default Fire

@@ -46,9 +46,9 @@
         cursor: pointer
     
 .main
+    margin-bottom: 7rem
 
-
-    &>div
+    &>div:first-child
         margin: 1rem 1.25rem
         padding: 8px 10px
         background-color: #fafafa
@@ -69,6 +69,31 @@
             font-size: .9rem 
             color: #222
             line-height: 1.45
+
+    .middle
+        display: flex
+        justify-content: space-between
+        margin-inline: 1rem
+        margin-block: 1rem
+
+.referrals
+    background-color: #fff
+    border-top-left-radius: .75rem 
+    border-top-right-radius: .75rem 
+    box-shadow: 0 0 3px 5px #0000000f
+    
+    article
+        display: flex
+        justify-content: space-between
+        padding: .75rem 1rem
+
+        div
+            display: flex
+            flex-direction: column
+            gap: 0.75rem
+            
+    &>article + article
+        border-top: 1px solid #ccc
 
 .icon
     // transform: scale(2)

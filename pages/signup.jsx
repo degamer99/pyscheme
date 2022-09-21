@@ -15,7 +15,7 @@ const SignUp = () => {
     const [first, setFirst] = useState("")
     const [last, setLast] = useState("")
     
-    const signup = (e:any) => {
+    const signup = (e) => {
       e.preventDefault;
       console.log({first, last, phone, password, email})
       createUserWithEmailAndPassword(auth, email, password)
@@ -27,7 +27,7 @@ const SignUp = () => {
           displayName: `${first} ${last}`,
           phoneNumber: `${phone}`}).
           then(() => {
-            sendEmailVerification(auth.currentUser):void
+            sendEmailVerification(auth.currentUser)
               .then((log) => {
                 console.log(log, "it is sent")
                 router.push("./home")

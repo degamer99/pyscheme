@@ -1,9 +1,9 @@
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import styles from '../styles/sass.module.sass'
-import { useState } from 'react'
+import styles from '../styles/settings.module.sass'
+import { useEffect, useState } from 'react'
 import { auth } from './_firebase'
-import {signInWithEmailAndPassword } from "firebase/auth";
+import {sendEmailVerification , onAuthStateChanged, updateProfile} from "firebase/auth";
 import { FaSignal } from 'react-icons/fa'
 
 const Settings: NextPage = () => {
@@ -11,36 +11,62 @@ const Settings: NextPage = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isEmail, setIsEmail] = useState(true)
+  const [account, setAccount] = useState({email: '', phoneNumber: ""})
 
-  const signin = (e:any)=>{
-      e.preventDefault;
-  signInWithEmailAndPassword(auth, email, password)
-  .then((userCredential) => {
-    // Signed in 
-    const user = userCredential.user;
-    router.push("/home")
-    // ...
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-  });
+  useEffect( ()=>{
+    onAuthStateChanged(auth, (user: any) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        setAccount(user)
+        const uid = user.uid;
+        const email = user.email
+        console.log(user)
+        // ...
+      } else {
+        // User is signed out
+        console.log("suth is out ")
+        router.push("./")
+        // ...
+      }
+    })
+  }, [])
+  const signOut = () =>{
+    auth.signOut()
   }
-  return (
+  return (<>
+  <header>
+
+  </header>
   <main className={styles.main}>
-    <div className={styles.logo}>
-      <FaSignal style={{fontSize: "2rem"}} />
-      <h1>Pyscheme</h1>
-    </div>
-    <form className={styles.form}>
-      <label htmlFor="email">{ isEmail ? "Email Address" : "Phone Number"}</label>
-      <input type="email" value={email} placeholder={isEmail ? "Enter your email address" : "Enter your phone number"} onChange={(e)=> setEmail(e.target.value)}/>
-      <label htmlFor="password">Password</label>
-      <input type="password"  value={password} placeholder="**********" onChange={(e)=> setPassword(e.target.value)}/>
-      <span onClick={ e => router.push("/signup")}> Don't have an account? Sign Up </span>
-      <button type="button" onClick={signin}>Sign In </button>
-    </form>
+    <section>
+
+    </section>
+    <section>
+      <article>
+        <div>
+          <h3>Email address</h3>
+          <p>{account.email}</p>
+        </div>
+        <div>
+          <button> Edit</button>
+        </div>
+      </article>
+      <article>
+        <div>
+          <h3>Phone number</h3>
+          <p>{account.phoneNumber}</p>
+        </div>
+        <div>
+          <button> Edit</button>
+        </div>
+      </article>
+    </section>
+    <footer className={styles.footer}>
+      <p onClick={signOut}>Logout</p>
+    </footer>
   </main>
+  </>
   )
 }
 

@@ -1,13 +1,13 @@
-import type { NextPage } from 'next'
+// import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import styles from '../styles/signup.module.sass'
 import { useState } from 'react'
 import { auth } from './_firebase'
-import { sendPasswordResetEmail, createUserWithEmailAndPassword } from "firebase/auth";
+import { sendEmailVerification,updateProfile, createUserWithEmailAndPassword } from "firebase/auth";
 import { FaSignal } from 'react-icons/fa'
 
 
-const SignUp: NextPage = () => {
+const SignUp = () => {
     const router = useRouter()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -18,31 +18,25 @@ const SignUp: NextPage = () => {
     const signup = (e:any) => {
       e.preventDefault;
       console.log({first, last, phone, password, email})
-    createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
+      createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
       // Signed in 
-      const user = userCredential.user;
-      console.log(user)
-      sendPasswordResetEmail(auth, email)
-        .then(() => {
-          console.log("email sent")
-          // Password reset email sent!
-          // ..
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          // ..
-        });
-      })
-      router.push("./home")
-      // ...
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // ..
-    });
-  }
+        const user = userCredential.user;
+      // console.log(user)
+        updateProfile(auth.currentUser, {
+          displayName: `${first} ${last}`,
+          phoneNumber: `${phone}`}).
+          then(() => {
+            sendEmailVerification(auth.currentUser):void
+              .then((log) => {
+                console.log(log, "it is sent")
+                router.push("./home")
+              }).catch((err) => {
+                console.log(err)
+              })
+            })
+          })
+        }
   return (
   <main className={styles.main}>
     <div className={styles.logo}>
@@ -69,6 +63,14 @@ const SignUp: NextPage = () => {
         <div>
             <label htmlFor="password">Password</label>  
             <input type="password" placeholder="**************"  value={password} onChange={(e)=> setPassword(e.target.value)}/>
+        </div>
+        <div>
+            <label htmlFor="confirm">Confirm Password</label>  
+            <input type="password" placeholder="**************"  value={password} onChange={(e)=> setPassword(e.target.value)}/>
+        </div>
+        <div>
+            <label htmlFor="refer">Referral code</label>  
+            <input type="text" placeholder="Optional"  value={password} onChange={(e)=> setPassword(e.target.value)}/>
         </div>
       <span onClick={ e => router.push("/")}> Already have an account? Sign in </span>
       <button type="button" onClick={e => signup(e)}>Sign Up </button>

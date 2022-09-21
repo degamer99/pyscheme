@@ -1,7 +1,11 @@
 import type { NextPage } from 'next'
+import { useRouter } from 'next/router'
 import styles from '../styles/home.module.sass'
 import { useState, useEffect } from 'react'
 import { FaCog, FaGift, FaHome, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { VscSettingsGear, VscHome } from "react-icons/vsc";
+
+import { MdShare, MdOutlineDashboard } from "react-icons/md";
 import { usePaystackPayment } from 'react-paystack';
 import { onAuthStateChanged, sendPasswordResetEmail } from "firebase/auth";
 import { auth } from './_firebase';
@@ -40,33 +44,31 @@ const PaystackHookExample = () => {
 
 const Home: NextPage = () => {
   useEffect( ()=>{
-    // why does my use effect code run twice 
-    try {
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          // User is signed in, see docs for a list of available properties
-          // https://firebase.google.com/docs/reference/js/firebase.User
-          const uid = user.uid;
-          const email = user.email
-          console.log({homePage: uid, user, email, he: "he is a boy"})
-        
-          // ...
-        } else {
-          // User is signed out
-          // ...
-        }
-      })
-    } catch (error) {
-      console.log(error)
-    }
-    // .catch( e => console.log(e));
-    // .then(()=> console.log("hlelo world"))
-
-  },[])
+    onAuthStateChanged(auth, (user: any) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        // setAccount(user)
+        const uid = user.uid;
+        const email = user.email
+        console.log(user)
+        // ...
+      } else {
+        // User is signed out
+        router.push("./")
+        // ...
+      }
+    })
+  }, [])
   const [info, setInfo] = useState({p1: "Available Balance", h3: "#2000", p2: "Total Balance", eye: <FaRegEyeSlash />})
   const [altInfo, setaltInfo] = useState({p1: "Today is", h3: " 13 September", p2: "2022", eye: <FaRegEye />})
   const [ change, setChange ] = useState(true)
   const [referals, setReferals] = useState(0)
+  const router = useRouter()
+  const toSettings = () => {
+    console.log("")
+    router.push("./settings")
+  }
   return (<>
       <header className={styles.head}>
         <div>
@@ -78,8 +80,9 @@ const Home: NextPage = () => {
           <span onClick={ e => setChange( x => !x)}>
           { change ? info.eye : altInfo.eye}
           </span>
-          <span>
-            <FaCog />
+          <span onClick={ toSettings }>
+            {/* <FaCog /> */}
+            <VscSettingsGear />
           </span>
         </div>
       </header>
@@ -91,7 +94,7 @@ const Home: NextPage = () => {
         </div>
         <div className={styles.middle}> 
         <h3> Your referals ({referals}) </h3>
-        <p>share</p>
+        <p><MdShare /></p>
         </div>
         <section className={styles.referrals}>
           <article>
@@ -129,7 +132,7 @@ const Home: NextPage = () => {
       <footer className={styles.footer}>
         <div>
         <div>
-            <FaHome className={styles.icon}/>
+            <MdOutlineDashboard className={styles.icon}/>
             <p>Home</p>
         </div>
         <div>
@@ -139,7 +142,7 @@ const Home: NextPage = () => {
             <p>Earn</p>
         </div>
         <div>
-            <FaCog className={styles.icon}/>
+            <VscSettingsGear className={styles.icon}/>
             <p>Withdraw</p>
         </div></div>
       </footer>

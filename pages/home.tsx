@@ -8,7 +8,7 @@ import { VscSettingsGear, VscHome } from "react-icons/vsc";
 import { MdShare, MdOutlineDashboard } from "react-icons/md";
 import { usePaystackPayment } from 'react-paystack';
 import { onAuthStateChanged, sendPasswordResetEmail } from "firebase/auth";
-import { auth } from './_firebase';
+import { auth, add } from './_firebase';
 
 
 // you can call this function anything
@@ -43,23 +43,7 @@ const PaystackHookExample = () => {
 
 
 const Home: NextPage = () => {
-  useEffect( ()=>{
-    onAuthStateChanged(auth, (user: any) => {
-      if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
-        // setAccount(user)
-        const uid = user.uid;
-        const email = user.email
-        console.log(user)
-        // ...
-      } else {
-        // User is signed out
-        router.push("./")
-        // ...
-      }
-    })
-  }, [])
+ 
   const [info, setInfo] = useState({p1: "Available Balance", h3: "#2000", p2: "Total Balance", eye: <FaRegEyeSlash />})
   const [altInfo, setaltInfo] = useState({p1: "Today is", h3: " 13 September", p2: "2022", eye: <FaRegEye />})
   const [ change, setChange ] = useState(true)
@@ -134,12 +118,6 @@ const Home: NextPage = () => {
         <div>
             <MdOutlineDashboard className={styles.icon}/>
             <p>Home</p>
-        </div>
-        <div>
-            <span className={styles.back}>
-              <FaGift className={styles.center} style={{transform: "scale(1.5)"}}/>
-            </span>
-            <p>Earn</p>
         </div>
         <div>
             <VscSettingsGear className={styles.icon}/>

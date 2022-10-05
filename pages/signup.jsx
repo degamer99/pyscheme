@@ -2,7 +2,7 @@
 import { useRouter } from 'next/router'
 import styles from '../styles/signup.module.sass'
 import { useState } from 'react'
-import { auth } from './_firebase'
+import { auth, add } from './_firebase'
 import { sendEmailVerification,updateProfile, createUserWithEmailAndPassword } from "firebase/auth";
 import { FaSignal } from 'react-icons/fa'
 
@@ -11,9 +11,12 @@ const SignUp = () => {
     const router = useRouter()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [confirm, setConfirm] = useState("")
+    const [referer, setReferer] = useState("")
     const [phone, setPhone] = useState("")
     const [first, setFirst] = useState("")
     const [last, setLast] = useState("")
+    const [username, setUsername] = useState("")
     
     const signup = (e) => {
       e.preventDefault;
@@ -25,11 +28,11 @@ const SignUp = () => {
       // console.log(user)
         updateProfile(auth.currentUser, {
           displayName: `${first} ${last}`,
-          phoneNumber: `${phone}`}).
+          phoneNumber: phone}).
           then(() => {
             sendEmailVerification(auth.currentUser)
               .then((log) => {
-                console.log(log, "it is sent")
+                add( `${first} ${last}`, {username, amount: 0.00});
                 router.push("./home")
               }).catch((err) => {
                 console.log(err)
@@ -45,12 +48,16 @@ const SignUp = () => {
     </div>
     <form className={styles.form}>
         <div>
-            <label htmlFor="">First Name </label>
+            <label htmlFor="first">First Name </label>
             <input type="text" name="first" id="first" placeholder="John" value={first} onChange={ e => setFirst(e.target.value)}/>
         </div>
         <div>
-            <label htmlFor="">Last Name</label>
+            <label htmlFor="last">Last Name</label>
             <input type="text" name="last" id="last" placeholder="Martin" value={last} onChange={ e => setLast(e.target.value)} />
+        </div>
+        <div>
+            <label htmlFor="user">Username</label>
+            <input type="text" name="user" id="user" value={username} onChange={ e => setUsername(e.target.value)} />
         </div>
         <div>
             <label htmlFor="email">Email Address</label>
@@ -66,11 +73,11 @@ const SignUp = () => {
         </div>
         <div>
             <label htmlFor="confirm">Confirm Password</label>  
-            <input type="password" placeholder="**************"  value={password} onChange={(e)=> setPassword(e.target.value)}/>
+            <input type="password" placeholder="**************"  value={confirm} onChange={(e)=> setConfirm(e.target.value)}/>
         </div>
         <div>
             <label htmlFor="refer">Referral code</label>  
-            <input type="text" placeholder="Optional"  value={password} onChange={(e)=> setPassword(e.target.value)}/>
+            <input type="text" placeholder="Optional"  value={referer} onChange={(e)=> setReferer(e.target.value)}/>
         </div>
       <span onClick={ e => router.push("/")}> Already have an account? Sign in </span>
       <button type="button" onClick={e => signup(e)}>Sign Up </button>

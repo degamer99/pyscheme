@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import styles from '../styles/settings.module.sass'
-import { useEffect, useState } from 'react'
+import { useEffect, useState} from 'react'
 import { auth } from './_firebase'
 import {sendEmailVerification , onAuthStateChanged, updateProfile} from "firebase/auth";
 import { FaSignal } from 'react-icons/fa'
@@ -14,20 +14,13 @@ const Settings: NextPage = () => {
   const [account, setAccount] = useState({email: '', phoneNumber: ""})
 
   useEffect( ()=>{
-    onAuthStateChanged(auth, (user: any) => {
+    onAuthStateChanged(auth, (user) => {
       if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
-        setAccount(user)
         const uid = user.uid;
         const email = user.email
         console.log(user)
-        // ...
       } else {
-        // User is signed out
-        console.log("suth is out ")
         router.push("./")
-        // ...
       }
     })
   }, [])

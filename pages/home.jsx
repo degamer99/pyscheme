@@ -1,18 +1,17 @@
-import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import styles from '../styles/home.module.sass'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { FaCog, FaGift, FaHome, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { VscSettingsGear, VscHome } from "react-icons/vsc";
 
 import { MdShare, MdOutlineDashboard } from "react-icons/md";
 import { usePaystackPayment } from 'react-paystack';
 import { onAuthStateChanged, sendPasswordResetEmail } from "firebase/auth";
-import { auth, add } from './_firebase';
+import { auth, add, generate } from './_firebase';
 
 
 // you can call this function anything
-const onSuccess:any = (reference: any) => {
+const onSuccess = (reference) => {
 // Implementation for whatever you want to do with reference and after success call.
 console.log(reference);
 // return reference
@@ -42,17 +41,30 @@ const PaystackHookExample = () => {
 };
 
 
-const Home: NextPage = () => {
+const Home = () => {
  
   const [info, setInfo] = useState({p1: "Available Balance", h3: "#2000", p2: "Total Balance", eye: <FaRegEyeSlash />})
   const [altInfo, setaltInfo] = useState({p1: "Today is", h3: " 13 September", p2: "2022", eye: <FaRegEye />})
   const [ change, setChange ] = useState(true)
   const [referals, setReferals] = useState(0)
   const router = useRouter()
+  const modalRef = useRef()
   const toSettings = () => {
     console.log("")
     router.push("./settings")
   }
+  useEffect( ()=>{
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const uid = user.uid;
+        const email = user.email
+        console.log(user)
+        console.log(uid.substring(0, 5))
+      } else {
+        router.push("./")
+      }
+    })
+  }, [])
   return (<>
       <header className={styles.head}>
         <div>
@@ -78,7 +90,7 @@ const Home: NextPage = () => {
         </div>
         <div className={styles.middle}> 
         <h3> Your referals ({referals}) </h3>
-        <p><MdShare /></p>
+        <p onClick={ e => modalRef.current.showModal()}><MdShare /></p>
         </div>
         <section className={styles.referrals}>
           <article>
@@ -112,6 +124,10 @@ const Home: NextPage = () => {
             </div>
           </article>
         </section>
+        <dialog ref={modalRef}>
+          <h1 onClick={ e => modalRef.current.close()}>hello and welcome</h1>
+          <p>hello there</p>
+        </dialog>
       </main>
       <footer className={styles.footer}>
         <div>

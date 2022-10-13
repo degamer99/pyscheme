@@ -6,6 +6,7 @@ import { auth } from './_firebase';
 
 export default function OnAuth ({children}){
     const router = useRouter();
+    const [ user, setUser ] = useState(null)
     useEffect( ()=>{
         onAuthStateChanged(auth, (user) => {
           if (user) {

@@ -33,6 +33,7 @@ export async function add (name, data){
   const result = await setDoc(doc(db, "users", name), data, {merge: true});
 }
 
+
 // try {
 //   async () => {
 //     const docRef = await addDoc(collection(db, "users"), {

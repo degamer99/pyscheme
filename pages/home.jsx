@@ -1,15 +1,16 @@
 import { useRouter } from 'next/router'
 import styles from '../styles/home.module.sass'
 import { useState, useEffect, useRef } from 'react'
-import { FaCog, FaGift, FaHome, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { FaCog, FaGift, FaHome, FaRegEye, FaRegEyeSlash, FaRegMoneyBillAlt } from "react-icons/fa";
 import { VscSettingsGear, VscHome } from "react-icons/vsc";
-
+// import * as dotenv from 'dotenv';
+// dotenv.config();
 import { MdShare, MdOutlineDashboard } from "react-icons/md";
 import { usePaystackPayment } from 'react-paystack';
 import { onAuthStateChanged, sendPasswordResetEmail } from "firebase/auth";
 import { auth, add, generate } from './_firebase';
 
-
+// console.log(process.env.test_key);
 // you can call this function anything
 const onSuccess = (reference) => {
 // Implementation for whatever you want to do with reference and after success call.
@@ -23,13 +24,12 @@ const onClose = () => {
 console.log('closed')
 }
 
-const PaystackHookExample = () => {
-  const [email, setEmail] = useState("olayinkabello962@gmail.com")
+const PaystackHookExample = ({ email }) => {
   const initializePayment = usePaystackPayment({
     reference: (new Date()).getTime().toString(),
     email: email,
-    amount: 50000,
-    publicKey: 'pk_test_53a3cc9fe7a3f310c0450dea00881d21796739cf',
+    amount: 20000,
+    publicKey: process.env.public_key,
   });
   return (
     <div className={styles.paystack} >
@@ -42,22 +42,23 @@ const PaystackHookExample = () => {
 
 
 const Home = () => {
- 
-  const [info, setInfo] = useState({p1: "Available Balance", h3: "#2000", p2: "Total Balance", eye: <FaRegEyeSlash />})
-  const [altInfo, setaltInfo] = useState({p1: "Today is", h3: " 13 September", p2: "2022", eye: <FaRegEye />})
-  const [ change, setChange ] = useState(true)
+  const [email, setEmail] = useState("")
   const [referals, setReferals] = useState(0)
   const router = useRouter()
   const modalRef = useRef()
   const toSettings = () => {
-    console.log("")
     router.push("./settings")
   }
+  const toWithdraw = () => {
+    router.push("./withdraw")
+  }
+  
   useEffect( ()=>{
+
     onAuthStateChanged(auth, (user) => {
       if (user) {
         const uid = user.uid;
-        const email = user.email
+        setEmail(user.email);
         console.log(user)
         console.log(uid.substring(0, 5))
       } else {
@@ -68,14 +69,11 @@ const Home = () => {
   return (<>
       <header className={styles.head}>
         <div>
-            <p>{ change ? info.p1 : altInfo.p1} </p>
-            <p>{ change ? info.h3 : altInfo.h3}</p>
-            <p>{ change ? info.p2 : altInfo.p2}</p>
+            <p> My Balance</p>
+            <p>#2000</p>
+            <p>Total Earning</p>
         </div>
         <div>
-          <span onClick={ e => setChange( x => !x)}>
-          { change ? info.eye : altInfo.eye}
-          </span>
           <span onClick={ toSettings }>
             {/* <FaCog /> */}
             <VscSettingsGear />
@@ -86,11 +84,11 @@ const Home = () => {
         <div className={styles.member}>
           <h3>Become a Member</h3>
           <p>Enjoy cool benefits, cash prizes and rewards, perform tasks and activities, earn cash through your affiliate link when someone registers.</p>
-          <PaystackHookExample />
+          <PaystackHookExample email={email} />
         </div>
         <div className={styles.middle}> 
         <h3> Your referals ({referals}) </h3>
-        <p onClick={ e => modalRef.current.showModal()}><MdShare /></p>
+        <p onClick={ e => modalRef.current.openModal()}><MdShare /></p>
         </div>
         <section className={styles.referrals}>
           <article>
@@ -132,11 +130,11 @@ const Home = () => {
       <footer className={styles.footer}>
         <div>
         <div>
-            <MdOutlineDashboard className={styles.icon}/>
+            <FaHome  className={styles.icon}/>
             <p>Home</p>
         </div>
         <div>
-            <VscSettingsGear className={styles.icon}/>
+            <FaRegMoneyBillAlt className={styles.icon} onClick={toWithdraw}/>
             <p>Withdraw</p>
         </div></div>
       </footer>
